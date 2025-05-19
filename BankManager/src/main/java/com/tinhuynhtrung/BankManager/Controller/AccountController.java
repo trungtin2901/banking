@@ -3,6 +3,7 @@ package com.tinhuynhtrung.BankManager.Controller;
 import com.tinhuynhtrung.BankManager.DTO.Request.AccountRequestDTO;
 import com.tinhuynhtrung.BankManager.DTO.Response.AccountResponseDTO;
 import com.tinhuynhtrung.BankManager.Service.AccountService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,8 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<AccountResponseDTO> createAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
+    public ResponseEntity<AccountResponseDTO> createAccount(
+            @Valid @RequestBody AccountRequestDTO accountRequestDTO) {
         AccountResponseDTO responseDTO = accountService.createAccount(accountRequestDTO);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
@@ -40,7 +42,8 @@ public class AccountController {
     }
 
     @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<AccountResponseDTO>> getAccountsByCustomerId(@PathVariable Long customerId) {
+    public ResponseEntity<List<AccountResponseDTO>> getAccountsByCustomerId(
+            @PathVariable Long customerId) {
         List<AccountResponseDTO> accounts = accountService.getActiveAccountsByCustomerId(customerId);
         return ResponseEntity.ok(accounts);
     }

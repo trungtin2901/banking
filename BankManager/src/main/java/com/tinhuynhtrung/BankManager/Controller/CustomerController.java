@@ -3,6 +3,7 @@ package com.tinhuynhtrung.BankManager.Controller;
 import com.tinhuynhtrung.BankManager.DTO.Request.CustomerRequestDTO;
 import com.tinhuynhtrung.BankManager.DTO.Response.CustomerResponseDTO;
 import com.tinhuynhtrung.BankManager.Service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,8 @@ public class CustomerController {
     }
 
     @PostMapping
-    public ResponseEntity<CustomerResponseDTO> createCustomer(@RequestBody CustomerRequestDTO customerRequestDTO){
+    public ResponseEntity<CustomerResponseDTO> createCustomer(
+            @Valid @RequestBody CustomerRequestDTO customerRequestDTO){
         CustomerResponseDTO customerResponseDTO = customerService.createCustomer(customerRequestDTO);
         return new ResponseEntity<>(customerResponseDTO, HttpStatus.CREATED);
     }

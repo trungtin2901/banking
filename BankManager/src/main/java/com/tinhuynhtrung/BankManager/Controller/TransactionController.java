@@ -3,6 +3,7 @@ package com.tinhuynhtrung.BankManager.Controller;
 import com.tinhuynhtrung.BankManager.DTO.Request.TransactionRequestDTO;
 import com.tinhuynhtrung.BankManager.DTO.Response.TransactionResponseDTO;
 import com.tinhuynhtrung.BankManager.Service.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class TransactionController {
 
     @PostMapping
     public ResponseEntity<TransactionResponseDTO> createTransaction(
-            @RequestBody TransactionRequestDTO transactionRequestDTO) {
+            @Valid @RequestBody TransactionRequestDTO transactionRequestDTO) {
         TransactionResponseDTO responseDTO = transactionService.createTransaction(transactionRequestDTO);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
