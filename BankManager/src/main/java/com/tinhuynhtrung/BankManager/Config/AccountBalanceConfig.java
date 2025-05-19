@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Configuration
-@ConfigurationProperties(prefix = "transaction.fee")
+@ConfigurationProperties(prefix = "account.balance.threshold")
 public class AccountBalanceConfig {
     @NotNull
     private BigDecimal medium;

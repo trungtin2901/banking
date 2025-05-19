@@ -77,7 +77,7 @@ public class TransactionService {
         transaction.setFee(fee);
         transaction.setLocation(transactionRequestDTO.getLocation());
         transaction.setTimestamp(LocalDateTime.now());
-
+        transaction.setCreatedAt(LocalDateTime.now());
         Transaction savedTransaction = transactionRepository.save(transaction);
         return convertToResponseDTO(savedTransaction);
     }

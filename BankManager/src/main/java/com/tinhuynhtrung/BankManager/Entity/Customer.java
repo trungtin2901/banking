@@ -24,6 +24,7 @@ public class Customer extends BaseEntity {
     private String phone;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Account> accounts = new ArrayList<>();
 
 }

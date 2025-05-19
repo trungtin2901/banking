@@ -42,20 +42,36 @@ public class AccountService {
         this.accountBalanceConfig = accountBalanceConfig;
     }
 
+    @Transactional
     public AccountResponseDTO createAccount(AccountRequestDTO accountRequestDTO) {
         Customer customer = customerRepository.findById(accountRequestDTO.getCustomerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id: " + accountRequestDTO.getCustomerId()));
 
-        Account account = modelMapper.map(accountRequestDTO, Account.class);
-        account.setCustomer(customer);
-        account.setOpeningDate(LocalDate.now());
+        if (accountRepository.existsByAccountNumberAndDeletedAtIsNull(accountRequestDTO.getAccountNumber())) {
+            throw new IllegalArgumentException("Account number already exists: " + accountRequestDTO.getAccountNumber());
+        }
 
+        Account account = new Account();
+        account.setAccountNumber(accountRequestDTO.getAccountNumber());
+        account.setBalance(accountRequestDTO.getBalance()); // Set initial balance
+        account.setTransactionLimit(accountRequestDTO.getTransactionLimit());
+        account.setOpeningDate(LocalDate.now()); // Set current date as opening date
+        account.setCustomer(customer);
+        account.setCreatedAt(LocalDateTime.now());
         Account savedAccount = accountRepository.save(account);
         return convertToResponseDTO(savedAccount);
     }
 
     public List<AccountResponseDTO> getAllAccounts() {
         return accountRepository.findAll().stream()
+                .map(this::convertToResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<AccountResponseDTO> searchAccounts(String keyword) {
+        List<Account> accounts = accountRepository.searchByAccountNumber(keyword);
+
+        return accounts.stream()
                 .map(this::convertToResponseDTO)
                 .collect(Collectors.toList());
     }
@@ -97,7 +113,12 @@ public class AccountService {
     }
 
     private AccountResponseDTO convertToResponseDTO(Account account) {
-        AccountResponseDTO responseDTO = modelMapper.map(account, AccountResponseDTO.class);
+        AccountResponseDTO responseDTO = new AccountResponseDTO();
+        responseDTO.setId(account.getId());
+        responseDTO.setAccountNumber(account.getAccountNumber());
+        responseDTO.setBalance(account.getBalance()); // Ensure balance is included
+        responseDTO.setTransactionLimit(account.getTransactionLimit());
+        responseDTO.setOpenDate(account.getOpeningDate()); // Include opening date
         responseDTO.setCustomerId(account.getCustomer().getId());
         responseDTO.setCustomerName(account.getCustomer().getName());
         return responseDTO;

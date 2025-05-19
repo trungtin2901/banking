@@ -31,6 +31,7 @@ public class CustomerService {
 
     public CustomerResponseDTO createCustomer(CustomerRequestDTO customerRequestDTO) {
         Customer customer = modelMapper.map(customerRequestDTO, Customer.class);
+        customer.setCreatedAt(LocalDateTime.now());
         Customer savedCustomer = customerRepository.save(customer);
         return modelMapper.map(savedCustomer, CustomerResponseDTO.class);
     }
@@ -63,18 +64,29 @@ public class CustomerService {
     }
 
     public CustomerResponseDTO updateCustomer(Long id, CustomerRequestDTO customerRequestDTO) {
-        Customer existingCustomer = customerRepository.findById(id)
+        Customer existingCustomer = customerRepository.findActiveById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Customer not found with id: " + id));
 
+        existingCustomer.setModifiedAt(LocalDateTime.now());
+
         modelMapper.map(customerRequestDTO, existingCustomer);
+
         Customer updatedCustomer = customerRepository.save(existingCustomer);
         return modelMapper.map(updatedCustomer, CustomerResponseDTO.class);
     }
 
-    public void deleteCustomer(Long id) {
-        if (!customerRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Customer not found with id: " + id);
-        }
-        customerRepository.deleteById(id);
+    public List<CustomerResponseDTO> searchCustomers(String keyword) {
+        List<Customer> customers = customerRepository.searchByName(keyword);
+
+        return customers.stream()
+                .map(customer -> modelMapper.map(customer, CustomerResponseDTO.class))
+                .collect(Collectors.toList());
     }
+
+//    public void deleteCustomer(Long id) {
+//        if (!customerRepository.existsById(id)) {
+//            throw new ResourceNotFoundException("Customer not found with id: " + id);
+//        }
+//        customerRepository.deleteById(id);
+//    }
 }

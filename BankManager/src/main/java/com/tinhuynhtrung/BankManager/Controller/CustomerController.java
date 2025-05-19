@@ -48,6 +48,14 @@ public class CustomerController {
         return ResponseEntity.ok(updateCustomer);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<CustomerResponseDTO>> searchCustomers(
+            @RequestParam String keyword){
+
+        List<CustomerResponseDTO> results = customerService.searchCustomers(keyword);
+        return ResponseEntity.ok(results);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void softDeleteCustomer(@PathVariable Long id) {

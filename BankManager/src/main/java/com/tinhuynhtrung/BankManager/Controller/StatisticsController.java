@@ -39,16 +39,16 @@ public class StatisticsController {
         Map<String, Long> stats = new HashMap<>();
         List<AccountResponseDTO> accounts = accountService.getAllAccounts();
 
-        stats.put("totalAccounts", (long) accounts.size());
-        stats.put("highBalanceAccounts", accounts.stream()
+        stats.put("Total Accounts", (long) accounts.size());
+        stats.put("High Balance Accounts", accounts.stream()
                 .filter(account -> "HIGH"
                         .equals(accountService.getAccountBalanceLevel(account.getBalance())))
                 .count());
-        stats.put("mediumBalanceAccounts", accounts.stream()
+        stats.put("Medium Balance Accounts", accounts.stream()
                 .filter(account -> "MEDIUM"
                         .equals(accountService.getAccountBalanceLevel(account.getBalance())))
                 .count());
-        stats.put("lowBalanceAccounts", accounts.stream()
+        stats.put("Low Balance Accounts", accounts.stream()
                 .filter(account -> "LOW"
                         .equals(accountService.getAccountBalanceLevel(account.getBalance())))
                 .count());

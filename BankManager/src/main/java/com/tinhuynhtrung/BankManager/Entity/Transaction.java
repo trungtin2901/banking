@@ -29,5 +29,6 @@ public class Transaction extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
+    @ToString.Exclude
     private Account account;
 }

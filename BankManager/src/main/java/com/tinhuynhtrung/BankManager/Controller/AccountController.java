@@ -45,6 +45,14 @@ public class AccountController {
         return ResponseEntity.ok(accounts);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<AccountResponseDTO>> searchAccounts(
+            @RequestParam String keyword) {
+
+        List<AccountResponseDTO> results = accountService.searchAccounts(keyword);
+        return ResponseEntity.ok(results);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
         accountService.softDeleteAccount(id);

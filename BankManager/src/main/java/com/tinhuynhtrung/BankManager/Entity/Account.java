@@ -26,7 +26,8 @@ public class Account extends BaseEntity {
     private LocalDate openingDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id")
+    @ToString.Exclude
     private Customer customer;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
